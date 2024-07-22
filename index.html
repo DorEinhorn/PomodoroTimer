@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Pomodoro Timer</h1>
+        <button id="dark-mode-toggle">Toggle Dark Mode</button>
+    </header>
+    <main>
+        <div id="left-container">
+            <div id="timer">25:00</div>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <input type="number" id="work-duration" placeholder="Work Duration (min)" value="25">
+            <input type="number" id="break-duration" placeholder="Break Duration (min)" value="5">
+            <button id="start-button">Start</button>
+            <button id="pause-button">Pause</button>
+            <button id="reset-button">Reset</button>
+            <div id="counters">
+                <p>Work Sessions Completed: <span id="work-counter">0</span></p>
+                <p>Break Sessions Completed: <span id="break-counter">0</span></p>
+                <p>Tasks Completed: <span id="completed-task-counter">0</span></p>
+                <p>Total Work Time: <span id="total-work-time">0</span> min</p>
+                <p>Total Break Time: <span id="total-break-time">0</span> min</p>
+            </div>
+        </div>
+        <div id="right-container">
+            <div id="task-container">
+                <div id="task-controls">
+                    <input type="text" id="new-task" placeholder="Add a new task">
+                    <input type="number" id="task-duration" placeholder="Task Duration (min)">
+                    <select id="task-priority">
+                        <option value="1">Low</option>
+                        <option value="2">Medium</option>
+                        <option value="3">High</option>
+                    </select>
+                    <button id="add-task-button">Add Task</button>
+                </div>
+                <ul id="task-list"></ul>
+            </div>
+        </div>
+        <audio id="notification-sound" src="notification.mp3"></audio>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
