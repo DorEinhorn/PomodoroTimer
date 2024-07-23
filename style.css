@@ -1,6 +1,12 @@
-/* General Styles */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+    font-family: "Roboto", sans-serif;
+    padding: 0;
+}
+
+
 body {
-    font-family: 'Arial', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -51,6 +57,11 @@ main {
     margin: 10px;
 }
 
+#left-container:hover, #right-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
 #left-container {
     flex: 1;
     display: flex;
@@ -85,7 +96,7 @@ main {
     height: 100%;
     width: 0;
     background-color: #4CAF50;
-    transition: width 0.5s;
+    transition: width 0.5s ease-in-out;
 }
 
 label {
@@ -119,6 +130,8 @@ button {
 
 button:hover {
     background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
 #counters {
@@ -172,6 +185,13 @@ body.dark-mode input, body.dark-mode select, body.dark-mode button {
     border-radius: 5px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.task-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .task-row {
