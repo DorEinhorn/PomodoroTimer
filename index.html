@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomodoro Timer</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
 </head>
 <body>
     <header>
         <h1>Pomodoro Timer</h1>
-        <button id="dark-mode-toggle">Toggle Dark Mode</button>
+        <nav>
+            <button id="settings-button">Settings</button>
+            <button id="dark-mode-toggle">Toggle Dark Mode</button>
+        </nav>
     </header>
     <main>
         <div id="left-container">
@@ -17,8 +21,6 @@
             <div id="progress-container">
                 <div id="progress-bar"></div>
             </div>
-            <input type="number" id="work-duration" placeholder="Work Duration (min)" value="25">
-            <input type="number" id="break-duration" placeholder="Break Duration (min)" value="5">
             <button id="start-button">Start</button>
             <button id="pause-button">Pause</button>
             <button id="reset-button">Reset</button>
@@ -28,24 +30,59 @@
                 <p>Tasks Completed: <span id="completed-task-counter">0</span></p>
                 <p>Total Work Time: <span id="total-work-time">0</span> min</p>
                 <p>Total Break Time: <span id="total-break-time">0</span> min</p>
+                <p>Pomodoro Cycles Completed: <span id="pomodoro-cycle-counter">0</span></p>
             </div>
+            <button id="export-tasks">Export Tasks</button>
+            <button id="import-tasks">Import Tasks</button>
+            <input type="file" id="import-tasks-file" accept=".json" style="display: none;">
         </div>
         <div id="right-container">
             <div id="task-container">
                 <div id="task-controls">
-                    <input type="text" id="new-task" placeholder="Add a new task">
-                    <input type="number" id="task-duration" placeholder="Task Duration (min)">
-                    <select id="task-priority">
-                        <option value="1">Low</option>
-                        <option value="2">Medium</option>
-                        <option value="3">High</option>
-                    </select>
-                    <button id="add-task-button">Add Task</button>
+                    <div class="task-row-1">
+                        <input type="text" id="new-task" placeholder="Add a new task">
+                        <input type="number" id="task-duration" placeholder="Task Duration (min)">
+                    </div>
+                    <div class="task-row-2">
+                        <input type="datetime-local" id="task-deadline">
+                        <select id="task-priority">
+                            <option value="1">Low</option>
+                            <option value="2">Medium</option>
+                            <option value="3">High</option>
+                        </select>
+                        <button id="add-task-button">Add Task</button>
+                    </div>
                 </div>
                 <ul id="task-list"></ul>
             </div>
         </div>
-        <audio id="notification-sound" src="notification.mp3"></audio>
+        <audio id="notification-sound" src="./notification.wav"></audio>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Settings</h2>
+                <label for="work-duration">Work Duration (min)</label>
+                <input type="number" id="work-duration" placeholder="Work Duration (min)" value="25">
+                <label for="break-duration">Break Duration (min)</label>
+                <input type="number" id="break-duration" placeholder="Break Duration (min)" value="5">
+                <label>
+                    <input type="checkbox" id="sound-notifications" checked> Sound Notifications
+                </label>
+                <label>
+                    <input type="checkbox" id="desktop-notifications"> Desktop Notifications
+                </label>
+                <label for="notification-message">Notification Message</label>
+                <input type="text" id="notification-message" placeholder="Notification Message">
+                <label for="notification-sound-file">Notification Sound</label>
+                <input type="file" id="notification-sound-file" accept="audio/*">
+                <label>
+                    <input type="checkbox" id="auto-start-next"> Auto-Start Next Timer
+                </label>
+                <button id="save-settings">Save Settings</button>
+            </div>
+        </div>
     </main>
     <script src="script.js"></script>
 </body>
