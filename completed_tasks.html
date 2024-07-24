@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completed Tasks</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Completed Tasks</h1>
+        <nav>
+            <button id="logout-button">Logout</button>
+        </nav>
+    </header>
+    <main>
+        <ul id="completed-task-list"></ul>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const completedTaskList = document.getElementById('completed-task-list');
+            const logoutButton = document.getElementById('logout-button');
+
+            function fetchCompletedTasks() {
+                const completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
+                completedTaskList.innerHTML = '';
+                completedTasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.textContent = `${task.text} - Completed on ${task.log[task.log.length - 1].time}`;
+                    completedTaskList.appendChild(li);
+                });
+            }
+
+            function logout() {
+                localStorage.removeItem('isAuthenticated');
+                alert('Logged out successfully.');
+                window.location.href = "login.html"; // Redirect to the login page
+            }
+
+            logoutButton.addEventListener('click', logout);
+            fetchCompletedTasks();
+        });
+    </script>
+</body>
+</html>

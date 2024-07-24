@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
     let currentTaskId = null;
     let autoStartNext = localStorage.getItem('autoStartNext') === 'true';
+    let idleTime = 0;
+    const idleLimit = 5 * 60 * 1000; // 5 minutes
 
     const timerDisplay = document.getElementById('timer');
     const startButton = document.getElementById('start-button');
@@ -46,6 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const settingsModal = document.getElementById('settings-modal');
     const closeButton = document.querySelector('.close-button');
     const saveSettingsButton = document.getElementById('save-settings');
+    const progressReportButton = document.getElementById('progress-report-button');
+    const progressReportModal = document.getElementById('progress-report-modal');
+    const progressCloseButton = document.querySelector('.progress-close-button');
+    const progressContent = document.getElementById('progress-content');
 
     breakInput.value = breakDuration / 60;
     autoStartNextCheckbox.checked = autoStartNext;
@@ -57,9 +63,13 @@ document.addEventListener("DOMContentLoaded", () => {
     pomodoroCycleCounterDisplay.textContent = pomodoroCycleCounter;
 
     function updateDisplay() {
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        timerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        if (timeLeft <= 0 && !isRunning) {
+            timerDisplay.textContent = "00:00";
+        } else {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
         updateProgressBar();
     }
 
@@ -87,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (timeLeft > 0) {
                     timeLeft--;
                     updateDisplay();
+                    idleTime = 0; // Reset idle time on each timer tick
                 } else {
                     if (soundNotificationsCheckbox.checked) {
                         notificationSound.play();
@@ -221,7 +232,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             taskList.appendChild(li);
         });
+        updateTimerDisplay();
     }
+
+    function updateTimerDisplay() {
+        if (tasks.length === 0) {
+            timerDisplay.textContent = "00:00";
+        }
+    }
+
+    function logCompletedTask(task) {
+        let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
+        completedTasks.push(task);
+        localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+    }
+    
 
     window.completeTask = function(taskId) {
         tasks = tasks.map(task => {
@@ -233,6 +258,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 completedTaskCounterDisplay.textContent = completedTaskCounter;
                 localStorage.setItem('completedTaskCounter', completedTaskCounter);
                 task.log.push({ time: new Date().toLocaleString(), duration: actualDuration.toFixed(2) });
+                logCompletedTask(task); // Log the completed task
             }
             return task;
         });
@@ -321,6 +347,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (nextTask) {
             setTaskDuration(nextTask.id);
             startTimer();
+        } else {
+            timeLeft = 0;
+            updateDisplay();
         }
     }
 
@@ -416,6 +445,24 @@ document.addEventListener("DOMContentLoaded", () => {
         notificationSound.src = notificationSoundFileInput.value;
         settingsModal.style.display = 'none';
     });
+
+    // Idle detection
+    function resetIdleTimer() {
+        idleTime = 0;
+    }
+
+    function checkIdleTime() {
+        idleTime += 1000; // Increase idle time by 1 second
+        if (idleTime >= idleLimit) {
+            pauseTimer();
+            alert("Timer paused due to inactivity.");
+            idleTime = 0; // Reset idle time after pausing
+        }
+    }
+
+    window.addEventListener('mousemove', resetIdleTimer);
+    window.addEventListener('keypress', resetIdleTimer);
+    setInterval(checkIdleTime, 1000); // Check idle time every second
 
     renderTasks();
     updateDisplay();
